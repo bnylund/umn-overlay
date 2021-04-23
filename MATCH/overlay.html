@@ -578,7 +578,7 @@
                 Relay.socket.emit("get match info", (match, err) => {
                     if(!err) {
                         // show scoreboard if match already started
-                        if(match["game"]["time"] < 300) {
+                        if(match["game"]["time"] < 299 && !match["game"]["hasWinner"]) {
                             document.getElementById("match-details").style.display = "flex";
                             document.getElementById("match-clockdiv").style.marginBottom = "0px";
                         }
@@ -604,7 +604,7 @@
                 Relay.socket.on("update state", (match) => {
                     let game = match["game"];
                     if(game["hasGame"]) {
-                        if(!game["hasTarget"])
+                        if(!game["hasTarget"] && !game["isReplay"])
                             document.getElementById("match-player").style.display = "none";
                         else if(game["hasWinner"])
                             document.getElementById("match-player").style.display = "none";
