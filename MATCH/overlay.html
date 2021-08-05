@@ -200,7 +200,7 @@
         max-height: 32px;
         margin-top: 10px;
         margin-bottom: 10px;
-        margin-left: 220px;
+        margin-left: 20px;
         font-size: 26px;
         font-family: 'Montserrat';
     }
@@ -270,7 +270,6 @@
         </div>
     </div>
     <div id="match-player">
-        <!--<img src="./img/umn.png" alt="" />
         <p>PLAYER NAME</p>
         <div id="match-player-tags">
             <p>GOALS</p>
@@ -285,7 +284,7 @@
             <p>0</p>
             <p>0</p>
             <p>0</p>
-        </div>-->
+        </div>
     </div>
     <div id="match-boost" style="display: none;min-width:200px;min-height:200px;">
         <match-boost stroke="15" progress="100" radius="140" teamlogo="./img/umn.png" primarycolor="#FF0000" secondarycolor="#550000" boost="100"></match-boost>
@@ -323,7 +322,7 @@
                 <circle id="match-backring" stroke="#000000aa" stroke-dasharray="${this._circumference} ${this._circumference}" style="stroke-dashoffset:0" stroke-width="${stroke}" fill="transparent" r="${normalizedRadius}" cx="${radius}" cy="${radius}" />
                 <circle id="match-ring" stroke="${primary_color}" stroke-dasharray="${this._circumference} ${this._circumference}" style="stroke-dashoffset:${this._circumference}" stroke-width="${stroke}" fill="transparent" r="${normalizedRadius}" cx="${radius}" cy="${radius}" />
                 <circle id="match-team-secondary" cx="50%" cy="50%" r="${normalizedRadius-(stroke/2)}" fill="${secondary_color}99" />
-                <text x="50%" y="50%" text-anchor="middle" fill="white" font-size="75px" font-family="Arial" style="text-shadow: 1px 1px 10px black;" dy=".3em">${boost}</text>
+                <text id="boost-amount" x="50%" y="50%" text-anchor="middle" fill="${primary_color}" font-size="75px" font-family="Arial" style="text-shadow: 1px 1px 10px black;" dy=".3em">${boost}</text>
             </svg>
 
             <style>
@@ -347,11 +346,17 @@
         }
 
         setTeamLogo(href) {
-            this._root.querySelector('image').setAttribute('href', href);
+            if(href.includes('https://www.dropbox.com/s/dl/hmb4latw40dgavd/logo.png')) {
+                this._root.querySelector('image').setAttribute('hidden', true);
+            } else {
+                this._root.querySelector('image').removeAttribute('hidden');
+                this._root.querySelector('image').setAttribute('href', href);
+            }
         }
 
         setPrimaryColor(color){
             this._root.querySelector("#match-ring").setAttribute('stroke', color);
+            this._root.querySelector('#boost-amount').setAttribute('fill', color);
         }
 
         setSecondaryColor(color){
@@ -375,6 +380,7 @@
                 this._root.querySelector('image').src = newValue;
             } else if(name == 'primarycolor') {
                 this._root.querySelector("#match-ring").stroke = newValue;
+                this._root.querySelector('text').setAttribute('fill', newValue);
             } else if(name == 'secondarycolor') {
                 this._root.querySelector('#match-team-secondary').fill = newValue + "99";
             } else if(name == 'boost') { 
@@ -553,8 +559,19 @@
                         document.querySelector('#match-hteam > div > p').innerText = homeName;
                         document.querySelector('#match-ateam > div > p').innerText = awayName;
 
-                        document.querySelector("#match-hteam > img").src = game["homeTeam"]["avatar"];
-                        document.querySelector("#match-ateam > img").src = game["awayTeam"]["avatar"];
+                        if(game["homeTeam"]["avatar"].includes('https://www.dropbox.com/s/dl/hmb4latw40dgavd/logo.png')) {
+                            document.querySelector("#match-ateam > img").setAttribute('hidden', true);
+                        } else {
+                            document.querySelector("#match-hteam > img").src = game["homeTeam"]["avatar"];
+                            document.querySelector("#match-ateam > img").removeAttribute('hidden');
+                        }
+                        if(game["awayTeam"]["avatar"].includes('https://www.dropbox.com/s/dl/hmb4latw40dgavd/logo.png')) {
+                            document.querySelector("#match-ateam > img").setAttribute('hidden', true);
+                        } else {
+                            document.querySelector("#match-ateam > img").src = game["awayTeam"]["avatar"];
+                            document.querySelector("#match-ateam > img").removeAttribute('hidden');
+                        }
+
                         document.getElementById("match-hteam-series").innerHTML = "";
                         document.getElementById("match-ateam-series").innerHTML = "";
                         
@@ -613,7 +630,7 @@
                             var { player, team } = game["isReplay"] ? findPlayer(match_lastGoal) : findPlayer(game["target"]);
 
                             let html = `
-                                <img src="${match["game"][team]["avatar"]}" alt="" style="filter: drop-shadow(0 0 1rem #000);" />
+                                <!--<img src="${match["game"][team]["avatar"]}" alt="" style="filter: drop-shadow(0 0 1rem #000);" />-->
                                 <p>${player['name']}</p>
                                 <div id="match-player-tags">
                                     <p>GOALS</p>
