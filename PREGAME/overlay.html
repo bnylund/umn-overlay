@@ -1,0 +1,280 @@
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+  rl-scene[name="PREGAME"] {
+    background-color: #000;
+  }
+  rl-scene[name="PREGAME"] p { 
+      font-family: 'Fira Sans', sans-serif; 
+  }
+  .pregame-logo {
+      width: 600px;
+      height: 600px;
+      z-index: 99;
+      object-fit: contain;
+      filter: drop-shadow(2px 4px 10px black);
+  }
+  .pregame-background {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background-color: #000;
+  }
+  #pregame-svg-right {
+      mask-image: linear-gradient(to left, rgba(0, 0, 0, 1.0) 60%, transparent 90%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1.0) 60%, transparent 90%);
+  }
+  #pregame-svg-left {
+      mask-image: linear-gradient(to right, rgba(0, 0, 0, 1.0) 60%, transparent 90%);
+      -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1.0) 60%, transparent 90%);
+  }
+  .pregame-center {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+  }
+  .pregame-center-horizontal {
+    justify-content: center;
+  }
+  #pregame-vs {
+      z-index: 99;
+      color: white;
+      text-shadow: 5px 5px #000;
+      font-size: 180px;
+      font-weight: bolder;
+  }
+  #pregame-clock {
+      z-index: 99;
+      color: white;
+      text-shadow: 5px 5px #000;
+      font-size: 100px;
+      font-weight: bolder;
+      margin-top: 15%;
+  }
+  .pregame-name {
+    width: 50% !important;
+    z-index: 99;
+    color: white;
+    text-shadow: 5px 5px #000;
+    font-size: 100px;
+    font-weight: bolder;
+    margin-top: 350px;
+    text-transform: uppercase;
+  }
+</style>
+
+<rl-scene hidden name="PREGAME" hide-event="game:pre_countdown_begin" hide-transition="true" class="overlay">
+  <div class="pregame-center pregame-center-horizontal" id="pregame-vs">
+    <p>VS</p>
+  </div>
+  <!--<div class="pregame-center" id="pregame-clock">
+    <p>0:00</p>
+  </div>-->
+
+  <div class="pregame-name pregame-center pregame-center-horizontal" id="pregame-left-name">
+    <p></p>
+  </div>
+  <div class="pregame-name pregame-center pregame-center-horizontal" style="left: 50% !important" id="pregame-right-name">
+    <p></p>
+  </div>
+  <div class="pregame-center pregame-center-horizontal" style="left: 50%;width:50%;">
+    <img class="pregame-logo" id="pregame-logo-right" />
+  </div>
+  <div class="pregame-center pregame-center-horizontal" style="width:50%;">
+    <img class="pregame-logo" id="pregame-logo-left" />
+  </div>
+  <div class="pregame-center pregame-center-horizontal" style="left: 25%;right:unset;">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" viewBox="0 0 1920 1080" class="pregame-background" id="pregame-svg-right"></svg>
+  </div>
+  <div class="pregame-center pregame-center-horizontal" style="right: 25%;left:unset;">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" viewBox="0 0 1920 1080" class="pregame-background" id="pregame-svg-left"></svg>
+  </div>
+</rl-scene>
+
+<script src="https://loading.io/assets/lded/lded.min.js?v=537e094e8"></script>
+<script src="https://loading.io/js/pack/base.min.js?v=537e094e8"></script>
+<script src="https://unpkg.com/delaunator@3.0.2/delaunator.min.js"></script>
+<script>
+  let config = {
+      variant: 0.5,
+      width: 1920,
+      height: 1080,
+      grain: 75,
+      /*palette: {
+                  // OUTER     INNER
+          colors: ["#005F33", "#509E2F"]
+      },*/
+      inverse: false,
+      movement: 10,
+      type: 'radial',
+      speed: 0.4,
+  }
+  
+  // loaded.io trianglify/dom
+  function generate(config){
+    var svg, ref$, raw, ret, v, width, height, grain, growth, sy, sx, colors, i$, to$, dy, j$, to1$, dx, y, x, r, delaunay, delaunaies, rets, dur, code, ts, i, id;
+    svg = "";
+    ref$ = [[], []], raw = ref$[0], ret = ref$[1];
+    v = config.variant;
+    width = config.width, height = config.height, grain = config.grain;
+    growth = 0.2;
+    sy = Math.ceil(height / grain);
+    sx = Math.ceil(width / grain);
+    colors = config.palette.colors.map(function(it){
+      return ldColor.hcl(it);
+    });
+    if (config.inverse) {
+      colors.reverse();
+    }
+    for (i$ = growth * -sy, to$ = (1 + growth) * sy; i$ <= to$; ++i$) {
+      dy = i$;
+      for (j$ = growth * -sx, to1$ = (1 + growth) * sx; j$ <= to1$; ++j$) {
+        dx = j$;
+        y = dy * grain;
+        x = dx * grain;
+        r = Math.random() - 0.5;
+        raw.push([x + r * grain * v, y + r * grain * v]);
+      }
+    }
+    delaunay = Delaunator.from(raw);
+    delaunaies = [0, 1].map(function(){
+      var ret;
+      ret = import$({}, delaunay);
+      ret.coords = ret.coords.map(function(it){
+      return Math.round(it + config.movement * (Math.random() - 0.5));
+      });
+      return ret;
+    });
+    rets = delaunaies.map(function(delaunay){
+      var idxmap, ret, centers, i$, to$, i, ref$, ts, cs, center, box, clen, v, mv, idx, ref1$, ref2$, a, dx, dy, d;
+      idxmap = {};
+      ret = [];
+      centers = [];
+      for (i$ = 0, to$ = delaunay.triangles.length; i$ < to$; i$ += 3) {
+        i = i$;
+        ref$ = [delaunay.triangles, delaunay.coords], ts = ref$[0], cs = ref$[1];
+        center = [0, 1, 2].map(fn$).reduce(fn1$, [0, 0]);
+        center = [center[0] / 3, center[1] / 3];
+        centers[i / 3] = center;
+      }
+      box = {
+        left: Math.min.apply(null, centers.map(function(it){
+            return it[0];
+        })) - width * 0.05,
+        right: Math.max.apply(null, centers.map(function(it){
+            return it[0];
+        })) + width * 0.05,
+        top: Math.min.apply(null, centers.map(function(it){
+            return it[1];
+        })) - height * 0.05,
+        bottom: Math.max.apply(null, centers.map(function(it){
+            return it[1];
+        })) + height * 0.05
+      };
+      box.width = box.right - box.left;
+      box.height = box.bottom - box.top;
+      for (i$ = 0, to$ = delaunay.triangles.length; i$ < to$; i$ += 3) {
+        i = i$;
+        ref$ = [delaunay.triangles, delaunay.coords], ts = ref$[0], cs = ref$[1];
+        center = centers[i / 3];
+        clen = colors.length;
+        if (config.type === 'radial') {
+            v = Math.sqrt(Math.pow(center[0] - width * 0.5, 2) + Math.pow(center[1] - height * 0.5, 2));
+            mv = Math.sqrt(Math.pow(width * 0.5, 2) + Math.pow(height * 0.5, 2)) * 1.5;
+            idx = clen - 1 - ((ref$ = (ref2$ = v * clen / mv) > 0 ? ref2$ : 0) < (ref1$ = clen - 1) ? ref$ : ref1$);
+        } else {
+            a = Math.PI * config.dir / 180;
+            dx = (0.5 + (box.width * 0.5 - (center[0] - box.left)) / box.width) * Math.cos(a);
+            dy = (0.5 + (box.height * 0.5 - (center[1] - box.top)) / box.height) * Math.sin(a);
+            idx = (ref$ = (ref2$ = (clen - 1) * Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))) > 0 ? ref2$ : 0) < (ref1$ = clen - 1) ? ref$ : ref1$;
+        }
+        d = [0, 1, 2].map(fn2$).map(fn3$).join(' ');
+        ret.push([d, idx]);
+      }
+      return ret;
+      function fn$(it){
+        return [cs[ts[i + it] * 2], cs[ts[i + it] * 2 + 1]];
+      }
+      function fn1$(a, b){
+        return [a[0] + b[0], a[1] + b[1]];
+      }
+      function fn2$(it){
+        var v;
+        v = ts[i + it];
+        return [cs[v * 2], cs[v * 2 + 1]];
+      }
+      function fn3$(d, i){
+        return [i === 0 ? 'M' : 'L', d[0], d[1], i === 2 ? "Z" : ''].join(' ');
+      }
+    });
+    dur = 1 / config.speed;
+    code = [];
+    rets = rets.concat([rets[0]]);
+    ts = (function(){
+        var i$, to$, results$ = [];
+        for (i$ = 0, to$ = rets.length; i$ < to$; ++i$) {
+        i = i$;
+        results$.push(Math.round(100 * i / (rets.length - 1)) / 100);
+        }
+        return results$;
+    }()).join(';');
+    svg = rets[0].map(function(d, i){
+        var ds, ref$, c0, c1, rate, v, cc, vs;
+        ds = rets.map(function(it){
+        return it[i][0];
+        });
+        ref$ = [Math.floor(d[1]), Math.ceil(d[1])], c0 = ref$[0], c1 = ref$[1];
+        rate = d[1] - c0;
+        v = ['h', 'c', 'l'].map(function(n){
+        return (colors[c1][n] - colors[c0][n]) * rate + colors[c0][n];
+        });
+        cc = ldColor.web({
+        h: v[0],
+        c: v[1],
+        l: v[2]
+        });
+        vs = ds.join(';');
+        return "<path d=\"" + d[0] + "\" stroke=\"" + cc + "\" fill=\"" + cc + "\">\n  <animate attributeName=\"d\" repeatDur=\"indefinite\" dur=\"" + dur + "s\"\n  keyTimes=\"" + ts + "\" values=\"" + vs + "\"/>\n</path>";
+    }).join('');
+    id = "bk-" + Math.random();
+    return "<g id=\"" + id + "\">" + svg + "</g><style type=\"text/css\"> #" + id + " path { stroke-width: 1 } </style>";
+  }
+
+  Relay.addListener("status_changed", (data) => {
+    if(data["status"] === "INITIALIZED") {
+      Relay.socket.on("team set", (data) => {
+        console.log('TEAM SET EVENT', data);
+        const team = data.team
+        if(data.teamnum === 0 && team) {
+          document.querySelector('#pregame-left-name p').innerHTML = team['name'];
+          document.getElementById('pregame-logo-left').src = team['avatar'];
+          document.getElementById('pregame-svg-left').innerHTML = generate({ ...config, palette: { colors: [team['colors']['homePrimary'], team['colors']['homeSecondary']] } });
+        } else {
+          document.querySelector('#pregame-right-name p').innerHTML = team['name'];
+          document.getElementById('pregame-logo-right').src = team['avatar'];
+          document.getElementById('pregame-svg-right').innerHTML = generate({ ...config, palette: { colors: [team['colors']['homePrimary'], team['colors']['homeSecondary']] } });
+        }
+      });
+    } else if(data["status"] === "CONNECTED") {
+      Relay.socket.emit("get match info", (match, err) => {
+        if(!err) {
+          const game = match.game ? match.game : {};
+          const home = game.homeTeam,
+                away = game.awayTeam;
+          if(home && away) {
+          document.querySelector('#pregame-left-name p').innerHTML = home['name'];
+            document.getElementById('pregame-logo-left').src = home['avatar'];
+            document.getElementById('pregame-svg-left').innerHTML = generate({ ...config, palette: { colors: [home['colors']['homePrimary'], home['colors']['homeSecondary']] } });
+          document.querySelector('#pregame-right-name p').innerHTML = away['name'];
+            document.getElementById('pregame-logo-right').src = away['avatar'];
+            document.getElementById('pregame-svg-right').innerHTML = generate({ ...config, palette: { colors: [away['colors']['homePrimary'], away['colors']['homeSecondary']] } });
+          }
+        }
+      });
+    }
+  })
+</script>

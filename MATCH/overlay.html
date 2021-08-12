@@ -663,7 +663,7 @@
                 // match-boost
                 Relay.socket.on("update state", (match) => {
                     let game = match["game"];
-                    if((!game["hasTarget"] && !game["isReplay"]) || game["hasWinner"]) {
+                    if((!game["hasTarget"] && !game["isReplay"]) || game["hasWinner"] || !game["hasGame"]) {
                         document.getElementById("match-boost").style.display = "none";
                     } else {
                         document.getElementById("match-boost").style.display = "block";
