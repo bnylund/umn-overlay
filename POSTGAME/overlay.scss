@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Staatliches&display=swap');
+  html, body {
+    margin: 0;
+  }
+  #postgame-root {
+    display: flex;
+    min-width: 100vw;
+    min-height: 100vh;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+
+    background: black;
+  }
+  #postgame-sponsors {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  #postgame-sponsors img {
+    height: 80px;
+    object-fit: contain;
+    width: 80px;
+  }
+  #postgame-top {
+    height: 9.6%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+  #postgame-middle {
+    height: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .postgame-teamcol {
+    width: 710px;
+    height: 100%;
+  }
+  .postgame-midcol {
+    width: 500px;
+    height: 100%;
+  }
+  .postgame-teamdata {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+  }
+  .postgame-teamdata p {
+    font-size: 56px;
+    font-family: 'Staatliches';
+    text-transform: uppercase;
+    margin: 0;
+  }
+  #postgame-gamedata {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #postgame-gamedata img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    filter: drop-shadow(2px 4px 6px black);
+  }
+  #postgame-gamedata p {
+    font-size: 68px;
+    font-weight: bolder;
+    color: #fff;
+  }
+  .postgame-series-div {
+    height: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+  }
+  .postgame-series-active {
+    background-color: yellow;
+    box-shadow: 0 0 5px 2px yellow;
+    margin-right: 15px;
+  }
+  .postgame-series-inactive {
+    margin-right: 15px;
+    background-color: rgb(126, 98, 6);
+    box-shadow: 0px 0px 15px rgb(212, 163, 3) inset;
+  }
+  .postgame-series {
+    width: 40px;
+    height: 7px;
+  }
+  #postgame-stats {
+    font-family: 'Staatliches';
+    color: #fff;
+    font-size: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    margin-top: 95px;
+  }
+  #postgame-stats div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  #postgame-stats div hr {
+    width: 30%;
+    height: 10px;
+    background-color: #fff;
+  }
+  #postgame-stats p {
+    margin: 0;
+  }
+  .postgame-playercol {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    min-width: 150px;
+    height: 100%;
+    align-items: center;
+  }
+  .postgame-table {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+  }
+  .postgame-playercol p {
+    font-family: 'Staatliches';
+    margin: 0;
+    font-size: 26px;
+  }
+  .postgame-playercol p {
+    font-size: 48px;
+  }
+  .postgame-playercol div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #7a0018;
+    box-shadow: 0 0 3px 5px inset #fc3;
+    color: #fc3;
+    width: 100%;
+    height: 100%;
+  }
+  #postgame-root {
+      transition: background 2s ease;
+      animation: 120s pause-scroll infinite linear;
+      background: url("./img/hexagon.svg"), 
+          linear-gradient(0deg, rgb(0, 0, 0) 0%, #44010e 20%, #7a0019 50%, #ad0023 90%, #fc3 100%, #fc3 100%)
+  }
+  @keyframes pause-scroll {
+      100% {background-position: 5000px 0px;}
+  }
+  #postgame-gamestats {
+    height: 200px;
+    width: 100%;
+  }
+  .postgame-playernamerow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 50px;
+    justify-content: center;
+  }
+  .postgame-playernamerow * {
+    margin: 0;
+    font-family: 'Staatliches';
+    font-size: 24px;
+  }
+  .postgame-playernamerow > div {
+    background: url('./img/playername.svg');
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fc3;
+    width: 182px;
+    height: 50px;
+  }
+  .postgame-playernamerow p {
+    max-width: 140px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .postgame-playernamerow > div:first-child {
+    margin-left: 20px;
+  }
+  .postgame-playernamerow > div:not(:first-child) {
+    margin-left: -31px;
+  }

@@ -1,5 +1,7 @@
 # UMN Overlay
 
+### README info on styling out of date.
+
 This repository holds all of the scenes. If you want to create a new scene, create a folder in this directory (named exactly as you want the scene to be named) and create a file called overlay.html. The directory you create can ONLY contain an overlay.html file and an img/ folder to store your assets. All styles and scripts must go inside of overlay.html.
 
 Your root element in your overlay.html file must be `<rl-scene>`. you must pass a name attribute in the definition that matches your directory name. Also, when you want to create ids and classes for your html elements, prefix them with your scene name so that they don't cross with other scenes. If you don't want your scene to pop up immediately when the page loads, add the attribute `hidden` to rl-scene.

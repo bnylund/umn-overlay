@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="50" width="150" viewBox="0 0 150 50" version="1.1">
+  <defs><filter id="inset-shadow">
+    <feOffset dx="10" dy="10"/>                                                         <!-- Shadow Offset -->
+    <feGaussianBlur stdDeviation="15"  result="offset-blur"/>                           <!-- Shadow Blur -->
+    <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/> <!-- Invert the drop shadow to create an inner shadow -->
+    <feFlood flood-color="#fc3" flood-opacity="1" result="color"/>                     <!-- Color & Opacity -->
+    <feComposite operator="in" in="color" in2="inverse" result="shadow"/>               <!-- Clip color inside shadow -->
+    <feComponentTransfer in="shadow" result="shadow">                                   <!-- Shadow Opacity -->
+        <feFuncA type="linear" slope=".9"/>
+    </feComponentTransfer>
+    <!--<feComposite operator="over" in="shadow" in2="SourceGraphic"/>-->                       <!-- Put shadow over original object -->
+</filter></defs>
+  <polygon fill="#fc3a" stroke="#7a0018" points="25,0 150,0 125,50 0,50" filter="url(#inset-shadow)" />
+</svg>

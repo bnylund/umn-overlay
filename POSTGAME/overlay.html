@@ -1,0 +1,174 @@
+<rl-scene name="POSTGAME" show-event="game:podium_start" show-transition="true" show-delay="4500" hide-event="game:pre_countdown_begin" hide-delay="1500" class="overlay">
+  <div id="postgame-root">
+    <div id="postgame-top">
+      <div class="postgame-teamcol postgame-teamdata">
+        <p>University of Minnesota</p>
+        <div class="postgame-series-div" id="postgame-wteam-series">
+          <div class="postgame-series postgame-series-active"></div>
+          <div class="postgame-series postgame-series-active"></div>
+          <div class="postgame-series postgame-series-inactive"></div>
+        </div>
+      </div>
+      <div class="postgame-midcol" id="postgame-gamedata">
+        <img src="https://www.dropbox.com/s/oi3axn8oqbnjcsj/umn.png?dl=1" />
+        <p>3 - 1</p>
+        <img src="https://www.dropbox.com/s/ahyqjyoxt0q7vvr/missourist.png?dl=1" />
+      </div>
+      <div class="postgame-teamcol postgame-teamdata">
+        <p>Missouri S&T</p>
+        <div class="postgame-series-div" id="postgame-lteam-series">
+          <div class="postgame-series postgame-series-active"></div>
+          <div class="postgame-series postgame-series-inactive"></div>
+          <div class="postgame-series postgame-series-inactive"></div>
+        </div>
+      </div>
+    </div>
+    <div id="postgame-middle">
+      <div class="postgame-teamcol">
+        <div class="postgame-playernamerow">
+          <div><p>PHAT</p></div>
+          <div><p>BISMO</p></div>
+          <div><p>MOM</p></div>
+        </div>
+        <div class="postgame-table">
+          <div class="postgame-playercol">
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>103</p></div>
+          </div>
+          <div class="postgame-playercol">
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>103</p></div>
+          </div>
+          <div class="postgame-playercol">
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>103</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="postgame-midcol postgame-table" id="postgame-stats">
+        <div><hr /><p>GOALS</p><hr /></div>
+        <div><hr /><p>ASSISTS</p><hr /></div>
+        <div><hr /><p>SAVES</p><hr /></div>
+        <div><hr /><p>SHOTS</p><hr /></div>
+        <div><hr /><p>SHOT %</p><hr /></div>
+        <div><hr /><p>DEMOS</p><hr /></div>
+        <div><hr /><p>SCORE</p><hr /></div>
+      </div>
+      <div class="postgame-teamcol">
+        <div class="postgame-playernamerow">
+          <div class="mst-test"><p>PHAT</p></div>
+          <div class="mst-test"><p>BISMO</p></div>
+          <div class="mst-test"><p>MOM</p></div>
+        </div>
+        <div class="postgame-table">
+          <div class="postgame-playercol mst-testbox">
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>103</p></div>
+          </div>
+          <div class="postgame-playercol mst-testbox">
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>103</p></div>
+          </div>
+          <div class="postgame-playercol mst-testbox">
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>1</p></div>
+            <div><p>103</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="postgame-gamestats">
+
+    </div>
+    <div id="postgame-sponsors">
+      <img src="https://www.dropbox.com/s/oi3axn8oqbnjcsj/umn.png?dl=1" />
+    </div>
+  </div>
+</rl-scene>
+
+<script>
+  function getPlayerNameBackgroundImage(primary_col, secondary_col) {
+    let svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="50" width="150" viewBox="0 0 150 50" version="1.1">
+        <defs><filter id="inset-shadow">
+          <feOffset dx="10" dy="10"/>
+          <feGaussianBlur stdDeviation="15"  result="offset-blur"/>
+          <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
+          <feFlood flood-color="${primary_col}" flood-opacity="1" result="color"/>
+          <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
+          <feComponentTransfer in="shadow" result="shadow">
+              <feFuncA type="linear" slope=".9"/>
+          </feComponentTransfer>
+      </filter></defs>
+        <polygon fill="${primary_col}a" stroke="${secondary_col}" points="25,0 150,0 125,50 0,50" filter="url(#inset-shadow)" />
+      </svg>
+    `;
+    return `url('data:image/svg+xml;base64,${window.btoa(svg)}')`;
+  }
+
+  POSTGAME.querySelectorAll('.mst-test').forEach((value) => {
+    value.style.backgroundImage = getPlayerNameBackgroundImage("#78BE20", "#005F83");
+    value.style.color = "#78BE20";
+  })
+
+  POSTGAME.querySelectorAll('.mst-testbox div').forEach((value) => {
+    value.style.backgroundColor = "#005F83";
+    value.style.color = "#78BE20";
+    value.style.boxShadow = "0px 0px 3px 5px inset #78BE20";
+  })
+</script>
+
+<script>
+  $(() => {
+    Relay.addListener("status_changed", (data) => {
+      if(data["status"] === "INITIALIZED") {
+        Relay.socket.on("update state", (match) => {
+          let game = match["game"];
+          // GET WINNING AND LOSING TEAM, THEN POPULATE
+          let stw = Math.ceil(match["bestOf"] / 2);
+          for(var i = 1; i <= stw; i++){
+            if(game["homeTeam"]["series"] >= i) {
+              POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-active"></div>';
+            } else {
+              POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-inactive"></div>';
+            }
+            if(game["awayTeam"]["series"] >= i) {
+              POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-active"></div>';
+            } else {
+              POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-inactive"></div>';
+            }
+          }
+        });
+      }
+    });
+  });
+</script>
