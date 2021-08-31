@@ -51,7 +51,7 @@ function compile(scene) {
         });
       })
     }
-    ncp(`./${scene}`, `./build/${scene}`, { filter: /^[^.]+$|\.(?!(scss|sass|html)$)([^.]+$)/ }, (err) => {
+    ncp(`./${scene}`, `./build/${scene}`, { filter: /^[^.]+$|\.(?!(scss|sass|html|svg|png|jpg|jpeg|mov|mp4|webm)$)([^.]+$)/ }, (err) => {
       if(err)
         return reject(err[0]);
       fs.writeFileSync(`./build/${scene}/overlay.html`, html);
