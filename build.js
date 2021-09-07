@@ -82,14 +82,16 @@ scenes.forEach(async (entry) => {
     chok.watch(`./${entry}`, { persistent: true, recursive: true })
       .on('change', async (path, stats) => {
         console.log(path);
-        const name = path.includes('\\') ? path.split('\\')[0] : path;
-        fs.rmSync(`./build/${name}`, { recursive: true });
+        let name = path.includes('\\') ? path.split('\\')[0] : path;
+        name = path.includes('/') ? path.split('/')[0] : path;
+        fs.rmdirSync(`./build/${name}`, { recursive: true });
         console.log(`[WATCH] Compiling ${name}...`);
         try {
           await compile(name);
           await zip(name);
         } catch(err) {
           console.log(`[WATCH] Failed to compile ${name}. ${err.message}`);
+          console.log(err)
         }
         console.log(`[WATCH] Done compiling ${name}!`);
       })

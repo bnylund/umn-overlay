@@ -10,9 +10,9 @@
         </div>
       </div>
       <div class="postgame-midcol" id="postgame-gamedata">
-        <img src="https://www.dropbox.com/s/oi3axn8oqbnjcsj/umn.png?dl=1" />
+        <img id="postgame-wteam-logo" src="https://www.dropbox.com/s/oi3axn8oqbnjcsj/umn.png?dl=1" />
         <p>3 - 1</p>
-        <img src="https://www.dropbox.com/s/ahyqjyoxt0q7vvr/missourist.png?dl=1" />
+        <img id="postgame-lteam-logo" src="https://www.dropbox.com/s/ahyqjyoxt0q7vvr/missourist.png?dl=1" />
       </div>
       <div class="postgame-teamcol postgame-teamdata">
         <p>Missouri S&T</p>
@@ -24,7 +24,7 @@
       </div>
     </div>
     <div id="postgame-middle">
-      <div class="postgame-teamcol">
+      <div id="postgame-wteam" class="postgame-teamcol">
         <div class="postgame-playernamerow">
           <div><p>PHAT</p></div>
           <div><p>BISMO</p></div>
@@ -69,7 +69,7 @@
         <div><hr /><p>DEMOS</p><hr /></div>
         <div><hr /><p>SCORE</p><hr /></div>
       </div>
-      <div class="postgame-teamcol">
+      <div id="postgame-lteam" class="postgame-teamcol">
         <div class="postgame-playernamerow">
           <div class="mst-test"><p>PHAT</p></div>
           <div class="mst-test"><p>BISMO</p></div>
@@ -106,9 +106,6 @@
         </div>
       </div>
     </div>
-    <div id="postgame-gamestats">
-
-    </div>
     <div id="postgame-sponsors">
       <img src="https://www.dropbox.com/s/oi3axn8oqbnjcsj/umn.png?dl=1" />
     </div>
@@ -135,6 +132,47 @@
     return `url('data:image/svg+xml;base64,${window.btoa(svg)}')`;
   }
 
+  /*
+     [
+       PLAYER: {
+         name: string,
+         primaryColor: string,
+         secondaryColor: string,
+         goals: number,
+         assists: number,
+         saves: number,
+         shots: number,
+         demos: number, 
+         score: number
+       }
+     ]
+  */
+  function getTeamStats(players) {
+    return `
+        <div class="postgame-playernamerow">
+          ${
+            players.map((val) => {
+              return `<div style="color: ${val.primaryColor};background-image: ${getPlayerNameBackgroundImage(val.primaryColor, val.secondaryColor)}"><p>${val.name}</p></div>`
+            }).join('')
+          }
+        </div>
+        <div class="postgame-table">
+          ${
+            players.map((val) => {
+              return `<div class="postgame-playercol" style="background-color: ${val.secondaryColor};color: ${val.primaryColor};box-shadow: 0px 0px 3px 5px inset ${val.primaryColor};">
+                <div><p>${val.goals}</p></div>
+                <div><p>${val.assists}</p></div>
+                <div><p>${val.saves}</p></div>
+                <div><p>${val.shots}</p></div>
+                <div><p>${Math.round(val.goals / val.shots)}</p></div>
+                <div><p>${val.demos}</p></div>
+                <div><p>${val.score}</p></div>
+              </div>`
+            }).join('')
+          }
+        </div>`
+  }
+
   POSTGAME.querySelectorAll('.mst-test').forEach((value) => {
     value.style.backgroundImage = getPlayerNameBackgroundImage("#78BE20", "#005F83");
     value.style.color = "#78BE20";
@@ -151,7 +189,7 @@
   $(() => {
     Relay.addListener("status_changed", (data) => {
       if(data["status"] === "INITIALIZED") {
-        Relay.socket.on("update state", (match) => {
+        Relay.socket.on("game ended", (match) => {
           let game = match["game"];
           // GET WINNING AND LOSING TEAM, THEN POPULATE
           let stw = Math.ceil(match["bestOf"] / 2);
@@ -167,7 +205,38 @@
               POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-inactive"></div>';
             }
           }
-        });
+
+          const wteam = game.homeTeam.score > game.awayTeam.score ? game.homeTeam : game.awayTeam,
+                lteam = game.awayTeam.score > game.homeTeam.score ? game.awayTeam : game.homeTeam
+
+          document.getElementById('postgame-wteam').innerHTML = getTeamStats(wteam.players.map((val) => {
+            return {
+              name: val.name,
+              primaryColor: wteam.colors.homePrimary,
+              secondaryColor: wteam.colors.homeSecondary,
+              goals: val.goals,
+              assists: val.assists,
+              saves: val.saves,
+              shots: val.shots,
+              score: val.score,
+              demos: val.demos,
+            }
+          }))
+
+          document.getElementById('postgame-lteam').innerHTML = getTeamStats(lteam.players.map((val) => {
+            return {
+              name: val.name,
+              primaryColor: lteam.colors.homePrimary,
+              secondaryColor: lteam.colors.homeSecondary,
+              goals: val.goals,
+              assists: val.assists,
+              saves: val.saves,
+              shots: val.shots,
+              score: val.score,
+              demos: val.demos,
+            }
+          }))
+        })
       }
     });
   });
