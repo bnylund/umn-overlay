@@ -21,6 +21,7 @@ html, body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-top: 60px;
 
   img {
     height: 80px;
@@ -159,10 +160,10 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #7a0018;
+    //background-color: #7a0018;
     //background: linear-gradient(to right, #fc3 0%, #7a0018 10%,#7a0018 90%, #fc3 100%);
-    box-shadow: 0 0 5px 5px inset #fc3;
-    color: #fc3;
+    //box-shadow: 0 0 5px 5px inset #fc3;
+    //color: #fc3;
     width: 100%;
     height: 100%;
   }

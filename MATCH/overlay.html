@@ -29,6 +29,7 @@
         left: 30px;
         box-shadow: 2px 2px 10px black;
         line-height: 1;
+        transition: top 0.5s;
     }
     #match-speeddiv {
         justify-content: center;
@@ -158,6 +159,7 @@
         font-weight: 600;
     }
     #match-statfeed {
+        transition: top 0.5s;
         max-width: 750px;
         max-height: 1080px;
         border: none;
@@ -236,9 +238,48 @@
         border-top-right-radius: 6px;
         border-bottom-right-radius: 6px;
     }
+    #match-topbar {
+        position: absolute;
+        transition: top 0.5s;
+        left: 0;
+        top: -70px;
+        height: 70px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #7a0019;
+        color: #fc3;
+        font-family: match;
+        overflow: hidden;
+    }
+    #match-topbar p {
+        margin: 0;
+        padding: 0;
+        letter-spacing: 0;
+        transition: letter-spacing 5s;
+        font-size: 60px;
+        font-weight: bolder;
+    }
+    #match-topbar img {
+        margin-right: auto;
+        height: 50px;
+        margin-left: 50px;
+        transition: height 5s;
+    }
+    #match-topbar img:last-child {
+        margin-left: auto;
+        margin-right: 50px;
+    }
 </style>
 
 <rl-scene hidden name="MATCH" show-event="game:initialized" hide-event="game:match_ended" hide-delay="7000">
+
+    <div id="match-topbar">
+        <img src="https://www.dropbox.com/s/oi3axn8oqbnjcsj/umn.png?dl=1" />
+        <p>GET HYPED IN THE CHAT!</p>
+        <img src="https://www.dropbox.com/s/oi3axn8oqbnjcsj/umn.png?dl=1" />
+    </div>
 
     <!-- needs scorebug, statfeed, playerview, boost, replayview -->
     <div id="match-details" style="display: none;">
@@ -291,7 +332,7 @@
         </div>
     </div>
     <div id="match-boost" style="display: none;min-width:200px;min-height:200px;">
-        <match-boost stroke="15" progress="100" radius="140" teamlogo="./img/umn.png" primarycolor="#FF0000" secondarycolor="#550000" boost="100"></match-boost>
+        <match-boost stroke="15" progress="100" radius="140" teamlogo="./img/error.png" primarycolor="#FF0000" secondarycolor="#550000" boost="100"></match-boost>
     </div>
     <div id="match-statfeed" class="container">
         <!--<div class="match-event">
@@ -350,7 +391,7 @@
         }
 
         setTeamLogo(href) {
-            if(href.includes('https://www.dropbox.com/s/dl/hmb4latw40dgavd/logo.png')) {
+            if(href.includes('https://www.dropbox.com/s/xju3htynyiwaqbg/logo.png?dl=1')) {
                 this._root.querySelector('image').setAttribute('hidden', true);
             } else {
                 this._root.querySelector('image').removeAttribute('hidden');
@@ -487,6 +528,31 @@
         }, 4000);
     }
 
+    function hype() {
+
+        const elm = document.getElementById('match-topbar');
+        elm.style.top = "0px";
+        elm.getElementsByTagName('p')[0].style.letterSpacing = "1.5rem";
+        const imgs = elm.getElementsByTagName('img');
+        for(let i = 0; i < imgs.length; i++) {
+            imgs[i].style.height = "80px";
+        }
+        document.getElementById('match-details').style.top = "100px";
+        document.getElementById('match-statfeed').style.top = "100px";
+
+        setTimeout(() => {
+            document.getElementById('match-details').style.top = "30px";
+            document.getElementById('match-statfeed').style.top = "30px";
+            elm.style.top="-70px";
+            elm.getElementsByTagName('p')[0].style.letterSpacing = "0";
+            for(let i = 0; i < imgs.length; i++) {
+                imgs[i].style.height = "50px";
+            }
+        }, 4000);
+    }
+
+    let pendingHype = -1;
+
     $(() => {
         Relay.addListener("status_changed", (data) => {
             if(data["status"] === "INITIALIZED") {
@@ -496,6 +562,18 @@
                     let game = match["game"];
                     if(!game["hasGame"]) 
                         document.getElementById("match-speeddiv").style.marginTop = "-40px";
+
+                    if(pendingHype != -1) {
+                        console.log(`team to hype: ${pendingHype}`)
+                        console.log(`homeTeam name: '${game["homeTeam"]["name"]}' awayTeam name: '${game["awayTeam"]["name"]}'`)
+                        if(pendingHype === 0 && game['homeTeam']['name'].includes('UMN')) {
+                            hype();
+                        }
+                        if(pendingHype === 1 && game['awayTeam']['name'].includes('UMN')) {
+                            hype();
+                        }
+                        pendingHype = -1;
+                    }
                 });
 
                 // match-replay
@@ -507,6 +585,8 @@
                         match_lastGoal = data['scorer']['id'];
                         document.getElementById('match-goal-speed').innerText = "Goal Speed: " + (data["goalspeed"]*0.621371).toFixed(0) + " MPH";
                         
+                        pendingHype = data['scorer']['teamnum']
+
                         setTimeout(() => {
                             document.getElementById('match-speeddiv').style.marginTop = "0px";
                         }, 3000);

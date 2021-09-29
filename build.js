@@ -72,6 +72,10 @@ let scenes = fs.readdirSync("./", {withFileTypes: true})
   .map(x => x.name)
   .filter(x => fs.existsSync("./" + x + "/overlay.html"));
 
+if(!(args[0] && args[0] === "--watch")) {
+  console.log("Zipping "+scenes.length+" scene" + (scenes.length == 1 ? "" : "s"));
+}
+
 scenes.forEach(async (entry) => {
   // New process: put all styles under style tag rl-scene[name="NAME"]
   // compile scss
@@ -84,7 +88,8 @@ scenes.forEach(async (entry) => {
         console.log(path);
         let name = path.includes('\\') ? path.split('\\')[0] : path;
         name = path.includes('/') ? path.split('/')[0] : path;
-        fs.rmdirSync(`./build/${name}`, { recursive: true });
+        name = name.replaceAll('\\overlay.html', '');
+        fs.rmSync(`.\\build\\${name}`, { recursive: true });
         console.log(`[WATCH] Compiling ${name}...`);
         try {
           await compile(name);
@@ -97,7 +102,6 @@ scenes.forEach(async (entry) => {
       })
       .on('error', (err) => {})
   } else {
-    console.log("Zipping "+scenes.length+" scene" + (scenes.length == 1 ? "" : "s"));
     try {
       await compile(entry);
       await zip(entry);

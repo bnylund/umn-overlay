@@ -1,30 +1,27 @@
-<rl-scene name="POSTGAME" show-event="game:podium_start" show-transition="true" show-delay="4500" hide-event="game:pre_countdown_begin" hide-delay="1500" class="overlay">
+<rl-scene hidden name="POSTGAME" show-event="game:podium_start" show-transition="true" show-delay="4500" hide-event="game:pre_countdown_begin" hide-transition="true" class="overlay">
   <div id="postgame-root">
     <div id="postgame-top">
       <div class="postgame-teamcol postgame-teamdata">
-        <p>University of Minnesota</p>
+        <p id="postgame-wteam-name"></p>
         <div class="postgame-series-div" id="postgame-wteam-series">
-          <div class="postgame-series postgame-series-active"></div>
-          <div class="postgame-series postgame-series-active"></div>
-          <div class="postgame-series postgame-series-inactive"></div>
+
         </div>
       </div>
       <div class="postgame-midcol" id="postgame-gamedata">
-        <img id="postgame-wteam-logo" src="https://www.dropbox.com/s/oi3axn8oqbnjcsj/umn.png?dl=1" />
-        <p>3 - 1</p>
-        <img id="postgame-lteam-logo" src="https://www.dropbox.com/s/ahyqjyoxt0q7vvr/missourist.png?dl=1" />
+        <img id="postgame-wteam-logo" src />
+        <p>0 - 0</p>
+        <img id="postgame-lteam-logo" src />
       </div>
       <div class="postgame-teamcol postgame-teamdata">
-        <p>Missouri S&T</p>
+        <p id="postgame-lteam-name"></p>
         <div class="postgame-series-div" id="postgame-lteam-series">
-          <div class="postgame-series postgame-series-active"></div>
-          <div class="postgame-series postgame-series-inactive"></div>
-          <div class="postgame-series postgame-series-inactive"></div>
+
         </div>
       </div>
     </div>
     <div id="postgame-middle">
       <div id="postgame-wteam" class="postgame-teamcol">
+        <!--
         <div class="postgame-playernamerow">
           <div><p>PHAT</p></div>
           <div><p>BISMO</p></div>
@@ -59,6 +56,7 @@
             <div><p>103</p></div>
           </div>
         </div>
+      -->
       </div>
       <div class="postgame-midcol postgame-table" id="postgame-stats">
         <div><hr /><p>GOALS</p><hr /></div>
@@ -70,6 +68,7 @@
         <div><hr /><p>SCORE</p><hr /></div>
       </div>
       <div id="postgame-lteam" class="postgame-teamcol">
+        <!--
         <div class="postgame-playernamerow">
           <div class="mst-test"><p>PHAT</p></div>
           <div class="mst-test"><p>BISMO</p></div>
@@ -103,7 +102,7 @@
             <div><p>1</p></div>
             <div><p>103</p></div>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
     <div id="postgame-sponsors">
@@ -120,13 +119,13 @@
           <feOffset dx="10" dy="10"/>
           <feGaussianBlur stdDeviation="15"  result="offset-blur"/>
           <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
-          <feFlood flood-color="${primary_col}" flood-opacity="1" result="color"/>
+          <feFlood flood-color="${secondary_col}" flood-opacity="1" result="color"/>
           <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
           <feComponentTransfer in="shadow" result="shadow">
               <feFuncA type="linear" slope=".9"/>
           </feComponentTransfer>
       </filter></defs>
-        <polygon fill="${primary_col}a" stroke="${secondary_col}" points="25,0 150,0 125,50 0,50" filter="url(#inset-shadow)" />
+        <polygon fill="${secondary_col}a" stroke="${primary_col}" points="25,0 150,0 125,50 0,50" filter="url(#inset-shadow)" />
       </svg>
     `;
     return `url('data:image/svg+xml;base64,${window.btoa(svg)}')`;
@@ -152,21 +151,21 @@
         <div class="postgame-playernamerow">
           ${
             players.map((val) => {
-              return `<div style="color: ${val.primaryColor};background-image: ${getPlayerNameBackgroundImage(val.primaryColor, val.secondaryColor)}"><p>${val.name}</p></div>`
+              return `<div style="color: ${val.secondaryColor};background-image: ${getPlayerNameBackgroundImage(val.primaryColor, val.secondaryColor)}"><p>${val.name}</p></div>`
             }).join('')
           }
         </div>
         <div class="postgame-table">
           ${
             players.map((val) => {
-              return `<div class="postgame-playercol" style="background-color: ${val.secondaryColor};color: ${val.primaryColor};box-shadow: 0px 0px 3px 5px inset ${val.primaryColor};">
-                <div><p>${val.goals}</p></div>
-                <div><p>${val.assists}</p></div>
-                <div><p>${val.saves}</p></div>
-                <div><p>${val.shots}</p></div>
-                <div><p>${Math.round(val.goals / val.shots)}</p></div>
-                <div><p>${val.demos}</p></div>
-                <div><p>${val.score}</p></div>
+              return `<div class="postgame-playercol">
+                <div style="background-color: ${val.primaryColor};color: ${val.secondaryColor};box-shadow: 0px 0px 3px 5px inset ${val.secondaryColor};"><p>${val.goals}</p></div>
+                <div style="background-color: ${val.primaryColor};color: ${val.secondaryColor};box-shadow: 0px 0px 3px 5px inset ${val.secondaryColor};"><p>${val.assists}</p></div>
+                <div style="background-color: ${val.primaryColor};color: ${val.secondaryColor};box-shadow: 0px 0px 3px 5px inset ${val.secondaryColor};"><p>${val.saves}</p></div>
+                <div style="background-color: ${val.primaryColor};color: ${val.secondaryColor};box-shadow: 0px 0px 3px 5px inset ${val.secondaryColor};"><p>${val.shots}</p></div>
+                <div style="background-color: ${val.primaryColor};color: ${val.secondaryColor};box-shadow: 0px 0px 3px 5px inset ${val.secondaryColor};"><p>${(val.shots === 0 ? 0 : val.goals / val.shots).toFixed(1)}</p></div>
+                <div style="background-color: ${val.primaryColor};color: ${val.secondaryColor};box-shadow: 0px 0px 3px 5px inset ${val.secondaryColor};"><p>${val.demos}</p></div>
+                <div style="background-color: ${val.primaryColor};color: ${val.secondaryColor};box-shadow: 0px 0px 3px 5px inset ${val.secondaryColor};"><p>${val.score}</p></div>
               </div>`
             }).join('')
           }
@@ -192,24 +191,37 @@
         Relay.socket.on("game ended", (match) => {
           let game = match["game"];
           // GET WINNING AND LOSING TEAM, THEN POPULATE
+          const wteam = game.homeTeam.score > game.awayTeam.score ? game.homeTeam : game.awayTeam,
+                lteam = game.homeTeam.score > game.awayTeam.score ? game.awayTeam : game.homeTeam
+
+          // RESET VALUES
+          POSTGAME.querySelector('#postgame-wteam-series').innerHTML = "";
+          POSTGAME.querySelector('#postgame-lteam-series').innerHTML = "";
+
           let stw = Math.ceil(match["bestOf"] / 2);
           for(var i = 1; i <= stw; i++){
-            if(game["homeTeam"]["series"] >= i) {
-              POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-active"></div>';
+            if(wteam.series >= i) {
+              POSTGAME.querySelector('#postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-active"></div>';
             } else {
-              POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-inactive"></div>';
+              POSTGAME.querySelector('#postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-inactive"></div>';
             }
-            if(game["awayTeam"]["series"] >= i) {
-              POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-active"></div>';
+            if(lteam.series >= i) {
+              POSTGAME.querySelector('#postgame-lteam-series').innerHTML += '<div class="postgame-series postgame-series-active"></div>';
             } else {
-              POSTGAME.getElementById('postgame-wteam-series').innerHTML += '<div class="postgame-series postgame-series-inactive"></div>';
+              POSTGAME.querySelector('#postgame-lteam-series').innerHTML += '<div class="postgame-series postgame-series-inactive"></div>';
             }
           }
 
-          const wteam = game.homeTeam.score > game.awayTeam.score ? game.homeTeam : game.awayTeam,
-                lteam = game.awayTeam.score > game.homeTeam.score ? game.awayTeam : game.homeTeam
 
-          document.getElementById('postgame-wteam').innerHTML = getTeamStats(wteam.players.map((val) => {
+          console.log(`winning team: ${wteam.name}, losing team: ${lteam.name}`)
+
+          document.querySelector('#postgame-wteam-logo').src = wteam.avatar;
+          document.querySelector('#postgame-lteam-logo').src = lteam.avatar;
+          document.querySelector('#postgame-wteam-name').innerHTML = wteam.name;
+          document.querySelector('#postgame-lteam-name').innerHTML = lteam.name;
+          document.querySelector('#postgame-gamedata p').innerHTML = wteam.score + ' - ' + lteam.score;
+
+          document.querySelector('#postgame-wteam').innerHTML = getTeamStats(wteam.players.map((val) => {
             return {
               name: val.name,
               primaryColor: wteam.colors.homePrimary,
@@ -223,7 +235,7 @@
             }
           }))
 
-          document.getElementById('postgame-lteam').innerHTML = getTeamStats(lteam.players.map((val) => {
+          document.querySelector('#postgame-lteam').innerHTML = getTeamStats(lteam.players.map((val) => {
             return {
               name: val.name,
               primaryColor: lteam.colors.homePrimary,
